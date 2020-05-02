@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<script src="jquery-3.3.1.js"></script>
+		<script>
+			$(function(){
+				//封装返回结果处理方法
+				function getStr(e){
+					//获取分页数据
+					var data = e[0];
+					//定义变量拼接标签
+					var str = "";
+					//遍历数据拼接展现
+					$.each(data,function(i,val){
+						str +="<tr>"
+						str += "<td>"+val.id+"</td>";
+						str += "<td>"+val.name+"</td>";
+						str += "</tr>";
+					});
+					//添加进表格
+					$('tbody').html(str);
+					//添加后台返回的超链接
+					var nextPage = e[1];
+					$('div').html(nextPage);
+				}
+				//页面加载完成时发送ajax获取第一页,
+				$.get('paging.php',{'pageNum':1},function(e){
+					getStr(e);
+				},'json');
+				//按钮被点击时提交当前页码到php,过程同上
+				$(document).on('click','button',function(){
+					$.ajax({
+						type:'get',
+						url: 'paging.php',
+						data:{'pageNum':$(this).attr("pageNum")},
+						dataType: 'json',
+						success:function(e){
+							getStr(e);
+						},
+						error: function(){
+							console.log('请求失败');
+						},
+						async: true,
+					});
+				});	
+			});
+		</script>
+	</head>
+	<body>	
+		<table border="1" cellpadding="cellpadding" width="200" align="center" rules="all">
+			<thead>
+				<tr>
+					<th>
+						id
+					</th>
+					<th>
+						name	
+					</th>
+				</tr>
+			</thead>
+			<tbody style="text-align:center">
+				<tr>
+				
+				</tr>
+			</tbody>
+		</table>
+		<div align="center" >
+			
+		</div>
+	</body>
+</html>
